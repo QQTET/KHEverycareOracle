@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8"/>
+    <title>케어 대상인</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>케어 대상인</h2>
+        </div>
+        이름: <span th:text="${careTarget.name}"></span><br/>
+        성별: <span th:text="${careTarget.gender}"></span><br/>
+        생년월일: <span th:text="${careTarget.birth}"></span><br/>
+        키: <span th:text="${careTarget.height}"></span><br/>
+        몸무게: <span th:text="${careTarget.weight}"></span><br/>
+        우편번호: <span th:text="${careTarget.zipcode}"></span><br/>
+        주소: <span th:text="${careTarget.address}"></span><br/>
+        상세주소: <span th:text="${careTarget.detailedAddress}"></span><br/>
+        장기요양등급: <span th:text="${careTarget.longTermCareGrade}"></span><br/>
+        설명: <span th:text="${careTarget.comment}"></span><br/>
+        반려동물 유무: <span th:text="${careTarget.pet}"></span><br/>
+        CCTV 유무: <span th:text="${careTarget.isCctvAgreement}"></span><br/>
+        케어 유형: <span th:text="${careTarget.careType}"></span><br/>
+        백신접종 유무: <span th:text="${careTarget.coronaTest}"></span><br/>
+
+
+        <div th:each="careTargetImage : ${careTargetImages}">
+            <a th:href="|/attach/${careTargetImage.id}|"
+               th:text="${careTargetImage.getUploadFileName()}"/><br/>
+            <img th:src="|/images/${careTargetImage.getStoreFileName()}|" width="300" height="300"/>
+        </div>
+        <input id="updateButton" type="button" value="수정"/>
+        <input id="deleteButton" type="button" value="삭제"/>
+
+        <div><a th:href="@{'/dashboard/caretargets/'+ ${careTarget.id} +'/schedule'}"> 스케줄 등록</a></div>
+
+        <h2>스케줄 목록</h2>
+        <div th:each="schedule : ${schedules}"
+             th:onclick="'location.href=\''+ @{/dashboard/caretargets/{careTargetId}/schedules/{scheduleId}(careTargetId=${careTarget.id},scheduleId=${schedule.id})} + '\''">
+            스케줄아이디: <span th:text="${schedule.id}"></span><br/>
+            스케줄명: <span th:text="${schedule.name}"></span><br/>
+            시작시간: <span th:text="${schedule.startTime}"></span><br/>
+            종료시간:<span th:text="${schedule.endTime}"></span><br/>
+        </div>
+
+    </div>
+
+    <!-- /container -->
+
+    <script th:inline="javascript">
+        /*<![CDATA]*/
+        const id = /*[[ ${careTarget.id} ]]*/'';
+        console.log(id)
+        /*]]*/
+        $('#updateButton').on('click', function () {
+            location.href = "/dashboard/caretargets/"+id+"/update";
+        })
+
+        $('#deleteButton').on('click', function () {
+
+            $.ajax({
+                url: "/api/dashboard/caretargets/"+id,
+                type: 'DELETE',
+                cache: false,
+                data: {
+                    "id":id
+                },
+                dataType:"json",
+                async: false,
+            })
+
+            location.href = "/dashboard/caretargets";
+        })
+
+    </script>
+</div>
+</body>
+</html>
