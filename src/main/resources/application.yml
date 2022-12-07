@@ -16,7 +16,7 @@ spring:
       max-request-size: 10MB
 
   datasource:
-    url: jdbc:oracle:thin:@10.30.4.200:1521:computer
+    url: jdbc:oracle:thin:@10.30.4.200:1521:orcl
     username: c##1801164
     password: p1801164
     driver-class-name: oracle.jdbc.driver.OracleDriver
